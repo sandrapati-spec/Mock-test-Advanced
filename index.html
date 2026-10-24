@@ -16,7 +16,7 @@
   <!-- TOP NAVIGATION BAR -->
   <header class="bg-indigo-950 text-white shadow-md sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('welcome')">
         <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-lg tracking-tight">
           MockTrack
         </div>
@@ -28,7 +28,10 @@
 
       <!-- Navigation & Auth Controls -->
       <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-        <button onclick="switchMainTab('create')" id="navCreateBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition">
+        <button onclick="switchMainTab('welcome')" id="navWelcomeBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition">
+          Home & Guide
+        </button>
+        <button onclick="switchMainTab('create')" id="navCreateBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition">
           + New Mock Test
         </button>
         <button onclick="switchMainTab('dashboard')" id="navDashBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition">
@@ -57,9 +60,133 @@
   <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1">
 
     <!-- ==========================================
+         VIEW 0: WELCOME & HOW-TO-USE OPENING PAGE
+         ========================================== -->
+    <section id="viewWelcome" class="space-y-8">
+      <!-- Hero Welcome Banner -->
+      <div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-6 sm:p-10 shadow-lg">
+        <div class="max-w-3xl space-y-4">
+          <span class="inline-block bg-indigo-500/30 border border-indigo-400/40 text-indigo-100 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            Welcome to Your Personal Exam Portal
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight">
+            Turn Any Question PDF into an Interactive Mock Test & Track Your Progress
+          </h2>
+          <p class="text-sm sm:text-base text-indigo-100/90 leading-relaxed">
+            This platform lets you convert any question-and-answer PDF or text into a real timed exam interface, organize your attempts into separate exam folders (like <strong>UIIC AO</strong>, <strong>GATE</strong>, <strong>ESE</strong>, <strong>SBI PO</strong>, or any custom exam), and visualize your score improvement over time.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button
+              onclick="switchMainTab('create')"
+              class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm shadow-md transition"
+            >
+              Create & Start a Mock Test &rarr;
+            </button>
+            <button
+              onclick="switchMainTab('dashboard')"
+              class="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-5 py-3 rounded-xl text-sm transition"
+            >
+              View My Section Analytics
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to Use Properly: 4-Step Guide -->
+      <div>
+        <div class="mb-4">
+          <h3 class="text-lg font-bold text-slate-900">How to Use This Website Properly (Step-by-Step Guide)</h3>
+          <p class="text-xs text-slate-500">Follow these 4 simple steps to create error-free mock tests and track your marks across exams.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Step 1 -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
+                1
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Sign In to Sync Your Progress</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Click <strong>Sign in with Google</strong> in the top bar so your exam sections, paper attempts, and graphs automatically sync across your phone and laptop.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
+              Works offline in Browser Mode too!
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
+                2
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Format Your PDF with Free AI</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Go to <strong>+ New Mock Test</strong> and click <strong>Copy Strict Text Prompt</strong>. Paste that prompt along with your raw Q&amp;A PDF into Gemini or ChatGPT to get clean, structured questions.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
+              Prevents broken PDF spacing errors
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
+                3
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Choose Section &amp; Take the Test</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Enter your <strong>Exam Section</strong> (e.g., <code>GATE</code> or <code>UIIC AO</code>), set your timer and negative marking, paste the formatted questions, and launch the live test.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
+              Review or submit at the last question
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
+                4
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Compare Marks by Section</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Open <strong>Section Analytics</strong> to view separate tabs for each exam, compare paper-by-paper marks, rename sections anytime, and review detailed answer explanations.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
+              Isolated charts for every exam
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference Format Box -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h4 class="text-sm font-bold text-slate-900">Want to try the website right now without uploading a file?</h4>
+          <p class="text-xs text-slate-500">
+            Click the button on the right to load a ready-made sample paper and experience the timer, last-question pop-up, and section analytics immediately.
+          </p>
+        </div>
+        <button
+          onclick="switchMainTab('create'); loadDemoQuestions();"
+          class="shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-sm transition"
+        >
+          Try Instant Demo Paper
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================
          VIEW 1: CREATE & LAUNCH NEW MOCK TEST
          ========================================== -->
-    <section id="viewCreate" class="space-y-6">
+    <section id="viewCreate" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- Left Column: Test Metadata & AI Prompt Helper -->
@@ -238,7 +365,7 @@ Explanation: The principle of indemnity restores the insured to the same financi
               <button onclick="navigateQuestion(-1)" id="prevQBtn" class="px-4 py-2 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100">
                 Previous
               </button>
-              <button onclick="navigateQuestion(1)" id="nextQBtn" class="px-5 py-2 rounded-lg bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-700">
+              <button onclick="handleSaveAndNext()" id="nextQBtn" class="px-5 py-2 rounded-lg bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-700">
                 Save & Next
               </button>
             </div>
@@ -252,13 +379,13 @@ Explanation: The principle of indemnity restores the insured to the same financi
             <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-4 pb-3 border-b border-slate-100">
               <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-600 inline-block"></span> Answered</div>
               <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Marked Review</div>
-              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span> Unvisited</div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span> Unanswered</div>
             </div>
             <div id="questionPaletteGrid" class="grid grid-cols-5 gap-2 max-h-64 overflow-y-auto pr-1"></div>
           </div>
 
           <button
-            onclick="submitExam(false)"
+            onclick="openLastQuestionModal(false)"
             class="w-full mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition"
           >
             Submit Paper
@@ -278,10 +405,13 @@ Explanation: The principle of indemnity restores the insured to the same financi
           <div>
             <h2 class="text-lg font-bold text-slate-900">Exam Section Folders & Progression Analytics</h2>
             <p class="text-xs text-slate-500">
-              Click any exam section tab below to isolate its papers, percentage progression trend, and marks comparison.
+              Click any exam section tab below to isolate its papers, or click <strong>Edit Section Name</strong> to rename a folder.
             </p>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="openEditSectionModal()" id="editSectionTopBtn" class="px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-700 hover:bg-indigo-100 transition">
+              &#9998; Edit Section Name
+            </button>
             <button onclick="exportBackupJson()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100">
               Export Backup (.json)
             </button>
@@ -299,8 +429,13 @@ Explanation: The principle of indemnity restores the insured to the same financi
       <!-- Summary KPI Cards for Selected Exam Section -->
       <div id="dashboardContentArea" class="space-y-6">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-400 uppercase">Selected Section</span>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-xs font-semibold text-slate-400 uppercase">Selected Section</span>
+              <button onclick="openEditSectionModal()" title="Edit Section Name" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">
+                Edit
+              </button>
+            </div>
             <p id="statSectionName" class="text-lg font-bold text-indigo-700 mt-1 truncate">—</p>
           </div>
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
@@ -375,6 +510,123 @@ Explanation: The principle of indemnity restores the insured to the same financi
     </section>
 
   </main>
+
+  <!-- =========================================================
+       POP-UP MODAL 1: LAST QUESTION / SUBMIT OR CHECK ANSWERS
+       ========================================================= -->
+  <div id="lastQuestionModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <span id="lastQModalBadge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
+          End of Question Paper
+        </span>
+        <button onclick="closeLastQuestionModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold leading-none">&times;</button>
+      </div>
+
+      <div>
+        <h3 id="lastQModalTitle" class="text-lg font-extrabold text-slate-900">
+          You have reached the last question!
+        </h3>
+        <p id="lastQModalDesc" class="text-xs text-slate-600 mt-1 leading-relaxed">
+          Do you want to submit your test now or go back to Question 1 to check your answers?
+        </p>
+      </div>
+
+      <!-- Quick Attempt Summary inside Popup -->
+      <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
+        <div>
+          <span class="block text-[10px] font-bold uppercase text-slate-400">Answered</span>
+          <span id="modalAnsweredCount" class="text-base font-extrabold text-emerald-600">0</span>
+        </div>
+        <div>
+          <span class="block text-[10px] font-bold uppercase text-slate-400">Unanswered</span>
+          <span id="modalUnansweredCount" class="text-base font-extrabold text-slate-700">0</span>
+        </div>
+        <div>
+          <span class="block text-[10px] font-bold uppercase text-slate-400">Marked Review</span>
+          <span id="modalReviewCount" class="text-base font-extrabold text-amber-600">0</span>
+        </div>
+      </div>
+
+      <!-- 2 Action Buttons: Check Back Answers vs Submit Test -->
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+        <button
+          onclick="checkBackAnswersFromFirst()"
+          class="flex-1 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold text-xs transition"
+        >
+          &larr; Check Back Answers (Go to Q1)
+        </button>
+        <button
+          onclick="confirmSubmitFromModal()"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition"
+        >
+          Submit Test Now &check;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       POP-UP MODAL 2: EDIT / RENAME EXAM SECTION NAME
+       ========================================================= -->
+  <div id="editSectionModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800">
+          Rename Exam Section
+        </span>
+        <button onclick="closeEditSectionModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold leading-none">&times;</button>
+      </div>
+
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Edit Section Name</h3>
+        <p class="text-xs text-slate-500 mt-1">
+          All papers under <strong id="currentSectionNameLabel" class="text-slate-800"></strong> will be moved to the new section name.
+        </p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">New Section Name</label>
+        <input
+          type="text"
+          id="newSectionNameInput"
+          placeholder="Enter new section name..."
+          class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button
+          onclick="closeEditSectionModal()"
+          class="px-4 py-2 rounded-xl border border-slate-300 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+        >
+          Cancel
+        </button>
+        <button
+          onclick="saveEditedSectionName()"
+          class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow transition"
+        >
+          Save Section Name
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       POP-UP MODAL 3: GENERAL NOTIFICATION / INFO POP-UP
+       ========================================================= -->
+  <div id="infoPopupModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4 text-center">
+      <h3 id="infoPopupTitle" class="text-base font-bold text-slate-900">Notice</h3>
+      <p id="infoPopupMessage" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line"></p>
+      <button
+        onclick="closeInfoPopup()"
+        class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition"
+      >
+        OK, Got It
+      </button>
+    </div>
+  </div>
 
   <!-- ==========================================
        APPLICATION LOGIC & FIREBASE SPARK SYNC
@@ -464,7 +716,7 @@ Explanation: The principle of indemnity restores the insured to the same financi
       refreshSectionAutocomplete();
     }
 
-    // Syncs local attempts with the user's single Firestore document (1 write per test)
+    // Syncs local attempts with the user's single Firestore document
     async function syncWithFirestore(direction = "merge") {
       if (!db || !currentUser) return;
       const userDocRef = doc(db, "users", currentUser.uid);
@@ -519,9 +771,19 @@ Explanation: The principle of indemnity restores the insured to the same financi
       });
     }
 
+    window.showInfoPopup = function (title, message) {
+      document.getElementById("infoPopupTitle").textContent = title;
+      document.getElementById("infoPopupMessage").textContent = message;
+      document.getElementById("infoPopupModal").classList.remove("hidden");
+    };
+
+    window.closeInfoPopup = function () {
+      document.getElementById("infoPopupModal").classList.add("hidden");
+    };
+
     window.handleGoogleSignIn = async function () {
       if (!auth) {
-        alert("Firebase Auth could not initialize.");
+        showInfoPopup("Firebase Error", "Firebase Auth could not initialize.");
         return;
       }
       try {
@@ -529,15 +791,17 @@ Explanation: The principle of indemnity restores the insured to the same financi
         await signInWithPopup(auth, provider);
       } catch (err) {
         if (err.code === "auth/unauthorized-domain") {
-          alert(
-            `One final step in Firebase!\n\nGo to Firebase Console -> Authentication -> Settings -> Authorized domains -> Add domain, and paste this exact domain:\n\n${window.location.hostname}`
+          showInfoPopup(
+            "Authorize Your GitHub Domain",
+            `Go to Firebase Console -> Authentication -> Settings -> Authorized domains -> Add domain, and paste:\n\n${window.location.hostname}`
           );
         } else if (err.code === "auth/configuration-not-found" || err.code === "auth/operation-not-allowed") {
-          alert(
-            "Almost done! Go to Firebase Console -> Authentication -> Sign-in method -> click Google -> toggle Enable ON and click Save."
+          showInfoPopup(
+            "Enable Google Sign-In",
+            "Go to Firebase Console -> Authentication -> Sign-in method -> click Google -> toggle Enable ON and click Save."
           );
         } else {
-          alert("Sign-In message: " + err.message);
+          showInfoPopup("Sign-In Notice", err.message);
         }
       }
     };
@@ -714,7 +978,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
     };
 
     // ============================================================================
-    // LIVE EXAM EXECUTION
+    // LIVE EXAM EXECUTION & LAST-QUESTION POP-UP LOGIC
     // ============================================================================
     window.parseAndStartExam = function () {
       const section = document.getElementById("examSectionInput").value.trim();
@@ -756,6 +1020,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       document.getElementById("livePaperTitle").textContent = currentExam.paperTitle;
       document.getElementById("liveMarkingInfo").textContent = `+${currentExam.posMarks} / -${currentExam.negMarks}`;
 
+      document.getElementById("viewWelcome").classList.add("hidden");
       document.getElementById("viewCreate").classList.add("hidden");
       document.getElementById("viewDashboard").classList.add("hidden");
       document.getElementById("viewExam").classList.remove("hidden");
@@ -772,7 +1037,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
         updateTimerUI();
         if (currentExam.remainingSeconds <= 0) {
           clearInterval(currentExam.timerInterval);
-          submitExam(true);
+          finalizeExamSubmission();
         }
       }, 1000);
     }
@@ -786,11 +1051,20 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
 
     function renderCurrentQuestion() {
       const idx = currentExam.currentIndex;
+      const total = currentExam.questions.length;
       const qObj = currentExam.questions[idx];
 
       document.getElementById("liveQuestionNumber").textContent =
-        `Question ${idx + 1} of ${currentExam.questions.length}`;
+        `Question ${idx + 1} of ${total}`;
       document.getElementById("liveQuestionText").textContent = qObj.question;
+
+      // Update Save & Next button label on the last question
+      const nextBtn = document.getElementById("nextQBtn");
+      if (idx === total - 1) {
+        nextBtn.textContent = "Save & Finish";
+      } else {
+        nextBtn.textContent = "Save & Next";
+      }
 
       const optsContainer = document.getElementById("liveOptionsContainer");
       optsContainer.innerHTML = "";
@@ -853,6 +1127,64 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       }
     };
 
+    // Triggered when clicking "Save & Next"
+    window.handleSaveAndNext = function () {
+      const isLast = currentExam.currentIndex === currentExam.questions.length - 1;
+      if (isLast) {
+        openLastQuestionModal(true);
+      } else {
+        currentExam.currentIndex++;
+        renderCurrentQuestion();
+      }
+    };
+
+    // Opens the Last Question / Submit Pop-up Modal
+    window.openLastQuestionModal = function (fromLastQuestionButton = true) {
+      const total = currentExam.questions.length;
+      const answeredCount = Object.keys(currentExam.responses).length;
+      const unansweredCount = total - answeredCount;
+      const reviewCount = Object.values(currentExam.reviewFlags).filter(Boolean).length;
+
+      document.getElementById("modalAnsweredCount").textContent = answeredCount;
+      document.getElementById("modalUnansweredCount").textContent = unansweredCount;
+      document.getElementById("modalReviewCount").textContent = reviewCount;
+
+      const titleEl = document.getElementById("lastQModalTitle");
+      const badgeEl = document.getElementById("lastQModalBadge");
+      const descEl = document.getElementById("lastQModalDesc");
+
+      if (fromLastQuestionButton) {
+        badgeEl.textContent = "Last Question Reached";
+        titleEl.textContent = "You have reached the last question!";
+        descEl.textContent =
+          "Do you want to submit the test now or check back your answers from Question 1?";
+      } else {
+        badgeEl.textContent = "Confirm Submission";
+        titleEl.textContent = "Ready to submit your paper?";
+        descEl.textContent =
+          "You can either submit your test right now or jump back to Question 1 to verify your answers.";
+      }
+
+      document.getElementById("lastQuestionModal").classList.remove("hidden");
+    };
+
+    window.closeLastQuestionModal = function () {
+      document.getElementById("lastQuestionModal").classList.add("hidden");
+    };
+
+    // Option 1 in Pop-up: Check Back Answers (Go back to 1st question)
+    window.checkBackAnswersFromFirst = function () {
+      closeLastQuestionModal();
+      currentExam.currentIndex = 0;
+      renderCurrentQuestion();
+    };
+
+    // Option 2 in Pop-up: Submit Test
+    window.confirmSubmitFromModal = function () {
+      closeLastQuestionModal();
+      finalizeExamSubmission();
+    };
+
     window.clearCurrentResponse = function () {
       delete currentExam.responses[currentExam.currentIndex];
       renderCurrentQuestion();
@@ -864,8 +1196,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       renderCurrentQuestion();
     };
 
-    window.submitExam = async function (autoSubmitted = false) {
-      if (!autoSubmitted && !confirm("Are you sure you want to submit this paper?")) return;
+    async function finalizeExamSubmission() {
       if (currentExam.timerInterval) clearInterval(currentExam.timerInterval);
 
       let correct = 0;
@@ -905,32 +1236,81 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       saveLocalAttempts();
       activeSectionFilter = currentExam.section;
 
-      // Sync to Firebase Cloud in background (uses 1 write)
       syncWithFirestore("push");
 
       switchMainTab("dashboard");
       openPaperReview(attemptRecord.id);
+    }
+
+    // ============================================================================
+    // EDIT / RENAME SECTION NAME MODAL LOGIC
+    // ============================================================================
+    window.openEditSectionModal = function (sectionToEdit = activeSectionFilter) {
+      if (!sectionToEdit || allAttempts.length === 0) {
+        showInfoPopup("No Section Selected", "Attempt at least one paper first to create and edit an exam section.");
+        return;
+      }
+      activeSectionFilter = sectionToEdit;
+      document.getElementById("currentSectionNameLabel").textContent = sectionToEdit;
+      document.getElementById("newSectionNameInput").value = sectionToEdit;
+      document.getElementById("editSectionModal").classList.remove("hidden");
+    };
+
+    window.closeEditSectionModal = function () {
+      document.getElementById("editSectionModal").classList.add("hidden");
+    };
+
+    window.saveEditedSectionName = function () {
+      const oldName = activeSectionFilter;
+      const newName = document.getElementById("newSectionNameInput").value.trim();
+
+      if (!newName) {
+        showInfoPopup("Invalid Name", "Section name cannot be empty.");
+        return;
+      }
+
+      allAttempts.forEach(attempt => {
+        if (attempt.section.trim() === oldName) {
+          attempt.section = newName;
+        }
+      });
+
+      activeSectionFilter = newName;
+      saveLocalAttempts();
+      syncWithFirestore("push");
+      closeEditSectionModal();
+      renderDashboard();
     };
 
     // ============================================================================
     // SECTION-WISE DASHBOARD & CHART.JS PROGRESSION GRAPHS
     // ============================================================================
     window.switchMainTab = function (tab) {
+      document.getElementById("viewWelcome").classList.add("hidden");
       document.getElementById("viewCreate").classList.add("hidden");
       document.getElementById("viewExam").classList.add("hidden");
       document.getElementById("viewDashboard").classList.add("hidden");
 
+      const welcomeBtn = document.getElementById("navWelcomeBtn");
       const createBtn = document.getElementById("navCreateBtn");
       const dashBtn = document.getElementById("navDashBtn");
 
-      if (tab === "create") {
+      const activeClass = "px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition";
+      const inactiveClass = "px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition";
+
+      welcomeBtn.className = inactiveClass;
+      createBtn.className = inactiveClass;
+      dashBtn.className = inactiveClass;
+
+      if (tab === "welcome") {
+        document.getElementById("viewWelcome").classList.remove("hidden");
+        welcomeBtn.className = activeClass;
+      } else if (tab === "create") {
         document.getElementById("viewCreate").classList.remove("hidden");
-        createBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition";
-        dashBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition";
+        createBtn.className = activeClass;
       } else {
         document.getElementById("viewDashboard").classList.remove("hidden");
-        dashBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition";
-        createBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition";
+        dashBtn.className = activeClass;
         renderDashboard();
       }
     };
@@ -961,7 +1341,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       tabsContainer.innerHTML = "";
 
       if (sections.length === 0) {
-        tabsContainer.innerHTML = `<span class="text-xs text-slate-400 py-1">No papers attempted yet. Start a mock test to create your first Exam Section!</span>`;
+        tabsContainer.innerHTML = `<span class="text-xs text-slate-400 py-1">No papers attempted yet. Click "+ New Mock Test" to take your first paper!</span>`;
         document.getElementById("statSectionName").textContent = "No Data";
         document.getElementById("statPapersCount").textContent = "0";
         document.getElementById("statAvgPercent").textContent = "0%";
@@ -977,21 +1357,35 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
 
       sections.forEach(([secName, count]) => {
         const isActive = secName === activeSectionFilter;
-        const btn = document.createElement("button");
-        btn.className = `px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-          isActive
-            ? "bg-indigo-600 text-white shadow-sm"
-            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-        }`;
-        btn.innerHTML = `<span>${escapeHtml(secName)}</span><span class="px-1.5 py-0.2 rounded-full text-[10px] ${
+        const wrapper = document.createElement("div");
+        wrapper.className = "inline-flex items-center rounded-lg overflow-hidden border " +
+          (isActive ? "border-indigo-600 bg-indigo-600 text-white shadow-xs" : "border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200");
+
+        const selectBtn = document.createElement("button");
+        selectBtn.className = "px-3 py-1.5 text-xs font-bold flex items-center gap-1.5";
+        selectBtn.innerHTML = `<span>${escapeHtml(secName)}</span><span class="px-1.5 py-0.2 rounded-full text-[10px] ${
           isActive ? "bg-indigo-800 text-indigo-100" : "bg-slate-200 text-slate-600"
         }">${count}</span>`;
-        btn.onclick = () => {
+        selectBtn.onclick = () => {
           activeSectionFilter = secName;
           closePaperReview();
           renderDashboard();
         };
-        tabsContainer.appendChild(btn);
+
+        const editIconBtn = document.createElement("button");
+        editIconBtn.title = `Rename ${secName}`;
+        editIconBtn.className = `px-2 py-1.5 text-xs border-l ${
+          isActive ? "border-indigo-500 hover:bg-indigo-700 text-indigo-100" : "border-slate-200 hover:bg-slate-300 text-slate-500"
+        }`;
+        editIconBtn.innerHTML = "&#9998;";
+        editIconBtn.onclick = (e) => {
+          e.stopPropagation();
+          openEditSectionModal(secName);
+        };
+
+        wrapper.appendChild(selectBtn);
+        wrapper.appendChild(editIconBtn);
+        tabsContainer.appendChild(wrapper);
       });
 
       const sectionPapers = allAttempts
@@ -1199,9 +1593,10 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
           saveLocalAttempts();
           syncWithFirestore("push");
           renderDashboard();
+          showInfoPopup("Backup Imported", "Your exam sections and paper history have been restored.");
         }
       } catch (e) {
-        alert("Invalid backup JSON file.");
+        showInfoPopup("Import Error", "Invalid backup JSON file.");
       }
     };
 
