@@ -16,7 +16,7 @@
   <!-- TOP NAVIGATION BAR -->
   <header class="bg-indigo-950 text-white shadow-md sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('welcome')">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="showWelcomeScreen()">
         <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-lg tracking-tight">
           MockTrack
         </div>
@@ -28,7 +28,7 @@
 
       <!-- Navigation & Auth Controls -->
       <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-        <button onclick="switchMainTab('welcome')" id="navWelcomeBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition">
+        <button onclick="showWelcomeScreen()" id="navWelcomeBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition">
           Home & Guide
         </button>
         <button onclick="switchMainTab('create')" id="navCreateBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition">
@@ -63,7 +63,6 @@
          VIEW 0: WELCOME & HOW-TO-USE OPENING PAGE
          ========================================== -->
     <section id="viewWelcome" class="space-y-8">
-      <!-- Hero Welcome Banner -->
       <div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-6 sm:p-10 shadow-lg">
         <div class="max-w-3xl space-y-4">
           <span class="inline-block bg-indigo-500/30 border border-indigo-400/40 text-indigo-100 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
@@ -73,14 +72,14 @@
             Turn Any Question PDF into an Interactive Mock Test & Track Your Progress
           </h2>
           <p class="text-sm sm:text-base text-indigo-100/90 leading-relaxed">
-            This platform lets you convert any question-and-answer PDF or text into a real timed exam interface, organize your attempts into separate exam folders (like <strong>UIIC AO</strong>, <strong>GATE</strong>, <strong>ESE</strong>, <strong>SBI PO</strong>, or any custom exam), and visualize your score improvement over time.
+            This platform lets you convert any question-and-answer PDF or text into a real timed exam interface, organize your attempts into separate exam folders (like <strong>UIIC AO</strong>, <strong>GATE</strong>, <strong>ESE</strong>, <strong>SBI PO</strong>), and visualize your score improvement over time.
           </p>
           <div class="pt-2 flex flex-wrap gap-3">
             <button
-              onclick="switchMainTab('create')"
+              onclick="proceedFromWelcome()"
               class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm shadow-md transition"
             >
-              Create & Start a Mock Test &rarr;
+              Proceed to App &rarr;
             </button>
             <button
               onclick="switchMainTab('dashboard')"
@@ -95,91 +94,47 @@
       <!-- How to Use Properly: 4-Step Guide -->
       <div>
         <div class="mb-4">
-          <h3 class="text-lg font-bold text-slate-900">How to Use This Website Properly (Step-by-Step Guide)</h3>
-          <p class="text-xs text-slate-500">Follow these 4 simple steps to create error-free mock tests and track your marks across exams.</p>
+          <h3 class="text-lg font-bold text-slate-900">How to Use This Website Properly</h3>
+          <p class="text-xs text-slate-500">Follow these simple steps to create error-free mock tests and track your marks.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Step 1 -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
-                1
-              </div>
-              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Sign In to Sync Your Progress</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Click <strong>Sign in with Google</strong> in the top bar so your exam sections, paper attempts, and graphs automatically sync across your phone and laptop.
-              </p>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">1</div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Sign In to Sync Progress</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">Click <strong>Sign in with Google</strong> in the top bar so your exam sections and paper attempts sync across devices.</p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
-              Works offline in Browser Mode too!
-            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">Works offline too!</div>
           </div>
 
-          <!-- Step 2 -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
-                2
-              </div>
-              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Format Your PDF with Free AI</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Go to <strong>+ New Mock Test</strong> and click <strong>Copy Strict Text Prompt</strong>. Paste that prompt along with your raw Q&amp;A PDF into Gemini or ChatGPT to get clean, structured questions.
-              </p>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">2</div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Format Questions via AI</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">Copy the strict text prompt and paste it along with your PDF into Gemini or ChatGPT to generate clean question blocks.</p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
-              Prevents broken PDF spacing errors
-            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">Avoids PDF formatting glitches</div>
           </div>
 
-          <!-- Step 3 -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
-                3
-              </div>
-              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Choose Section &amp; Take the Test</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Enter your <strong>Exam Section</strong> (e.g., <code>GATE</code> or <code>UIIC AO</code>), set your timer and negative marking, paste the formatted questions, and launch the live test.
-              </p>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">3</div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Organize in Exam Sections</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">Select a pre-existing exam section from the dropdown or choose <strong>+ Create New Section...</strong> to type a custom name manually.</p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
-              Review or submit at the last question
-            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">Multiple papers per section</div>
           </div>
 
-          <!-- Step 4 -->
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">
-                4
-              </div>
-              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Compare Marks by Section</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Open <strong>Section Analytics</strong> to view separate tabs for each exam, compare paper-by-paper marks, rename sections anytime, and review detailed answer explanations.
-              </p>
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-sm flex items-center justify-center mb-3">4</div>
+              <h4 class="font-bold text-sm text-slate-900 mb-1.5">Track Progression Graphs</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">Open <strong>Section Analytics</strong> to review isolated score progression lines and marks comparison charts for each exam.</p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">
-              Isolated charts for every exam
-            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-indigo-600 font-semibold">Detailed answer key reviews</div>
           </div>
         </div>
-      </div>
-
-      <!-- Quick Reference Format Box -->
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="space-y-1">
-          <h4 class="text-sm font-bold text-slate-900">Want to try the website right now without uploading a file?</h4>
-          <p class="text-xs text-slate-500">
-            Click the button on the right to load a ready-made sample paper and experience the timer, last-question pop-up, and section analytics immediately.
-          </p>
-        </div>
-        <button
-          onclick="switchMainTab('create'); loadDemoQuestions();"
-          class="shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-sm transition"
-        >
-          Try Instant Demo Paper
-        </button>
       </div>
     </section>
 
@@ -195,7 +150,7 @@
           <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
             <h2 class="text-base font-bold text-slate-900 mb-1">1. Exam Section & Paper Details</h2>
             <p class="text-xs text-slate-500 mb-4">
-              Type any exam category (e.g., UIIC AO, GATE, ESE, SSC CGL). Papers under the same section are grouped together for progression charts.
+              Select or create an exam section. You can attempt multiple papers under each section.
             </p>
 
             <div class="space-y-3">
@@ -203,14 +158,23 @@
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
                   Exam Section / Folder *
                 </label>
+                <!-- Dropdown Selector -->
+                <select
+                  id="examSectionDropdown"
+                  onchange="handleSectionDropdownChange()"
+                  class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none mb-2"
+                >
+                  <option value="">-- Select Exam Section --</option>
+                  <option value="__NEW__">+ Create New Section...</option>
+                </select>
+
+                <!-- Manual Input (Shown only when "__NEW__" is selected or no sections exist) -->
                 <input
                   type="text"
-                  id="examSectionInput"
-                  list="existingSectionsList"
-                  placeholder="e.g., UIIC AO, GATE, ESE"
-                  class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  id="examSectionManualInput"
+                  placeholder="Type new section name (e.g., UIIC AO, GATE)"
+                  class="hidden w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
-                <datalist id="existingSectionsList"></datalist>
               </div>
 
               <div>
@@ -249,7 +213,7 @@
               <span class="text-[11px] bg-indigo-200 text-indigo-900 font-semibold px-2 py-0.5 rounded">100% Reliable</span>
             </div>
             <p class="text-xs text-indigo-900/80 mb-3 leading-relaxed">
-              Upload your question PDF to ChatGPT or Gemini along with this strict text prompt, then paste the AI's reply into the box on the right (or upload as a <code>.txt</code> / <code>.pdf</code> file).
+              Upload your question PDF to ChatGPT or Gemini along with this strict text prompt, then paste the AI's reply into the box on the right.
             </p>
             <button
               onclick="copyStrictAiPrompt()"
@@ -532,7 +496,6 @@ Explanation: The principle of indemnity restores the insured to the same financi
         </p>
       </div>
 
-      <!-- Quick Attempt Summary inside Popup -->
       <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-center">
         <div>
           <span class="block text-[10px] font-bold uppercase text-slate-400">Answered</span>
@@ -548,7 +511,6 @@ Explanation: The principle of indemnity restores the insured to the same financi
         </div>
       </div>
 
-      <!-- 2 Action Buttons: Check Back Answers vs Submit Test -->
       <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
         <button
           onclick="checkBackAnswersFromFirst()"
@@ -613,17 +575,22 @@ Explanation: The principle of indemnity restores the insured to the same financi
   </div>
 
   <!-- =========================================================
-       POP-UP MODAL 3: GENERAL NOTIFICATION / INFO POP-UP
+       POP-UP MODAL 3: INTRODUCTORY & GENERAL INFO POP-UP
        ========================================================= -->
   <div id="infoPopupModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4 text-center">
-      <h3 id="infoPopupTitle" class="text-base font-bold text-slate-900">Notice</h3>
-      <p id="infoPopupMessage" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line"></p>
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 text-center">
+      <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center mx-auto text-xl font-bold">
+        &#128218;
+      </div>
+      <h3 id="infoPopupTitle" class="text-lg font-extrabold text-slate-900">Welcome to Exam MockTracker</h3>
+      <p id="infoPopupMessage" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line text-left bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+        You can separate different exams under different sections. Under each section, you can attempt multiple papers and track your score progression separately!
+      </p>
       <button
         onclick="closeInfoPopup()"
         class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition"
       >
-        OK, Got It
+        Get Started &rarr;
       </button>
     </div>
   </div>
@@ -672,14 +639,13 @@ Explanation: The principle of indemnity restores the insured to the same financi
       console.warn("Firebase initialization error:", err);
     }
 
-    // Configure PDF.js Worker
     if (window.pdfjsLib) {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     }
 
     // ============================================================================
-    // STATE MANAGEMENT (HYBRID LOCALSTORAGE + FIRESTORE)
+    // STATE MANAGEMENT
     // ============================================================================
     const LOCAL_STORAGE_KEY = "mocktrack_attempts_v1";
     let allAttempts = loadLocalAttempts();
@@ -687,7 +653,6 @@ Explanation: The principle of indemnity restores the insured to the same financi
     let lineChartInstance = null;
     let barChartInstance = null;
 
-    // Live Exam State
     let currentExam = {
       section: "",
       paperTitle: "",
@@ -713,10 +678,9 @@ Explanation: The principle of indemnity restores the insured to the same financi
 
     function saveLocalAttempts() {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allAttempts));
-      refreshSectionAutocomplete();
+      refreshSectionDropdowns();
     }
 
-    // Syncs local attempts with the user's single Firestore document
     async function syncWithFirestore(direction = "merge") {
       if (!db || !currentUser) return;
       const userDocRef = doc(db, "users", currentUser.uid);
@@ -747,7 +711,6 @@ Explanation: The principle of indemnity restores the insured to the same financi
       }
     }
 
-    // Listen to Firebase Auth state changes
     if (auth) {
       onAuthStateChanged(auth, async (user) => {
         currentUser = user;
@@ -771,6 +734,27 @@ Explanation: The principle of indemnity restores the insured to the same financi
       });
     }
 
+    // Show Opening Info Pop-up when browser starts
+    window.addEventListener("DOMContentLoaded", () => {
+      refreshSectionDropdowns();
+      // Show welcome guide popup on first load
+      showInfoPopup(
+        "Welcome to MockTracker",
+        "You can separate different exams under different sections. Under each section, you can attempt multiple papers and track your score progression separately!"
+      );
+    });
+
+    window.showWelcomeScreen = function () {
+      document.getElementById("viewWelcome").classList.remove("hidden");
+      document.getElementById("viewCreate").classList.add("hidden");
+      document.getElementById("viewExam").classList.add("hidden");
+      document.getElementById("viewDashboard").classList.add("hidden");
+    };
+
+    window.proceedFromWelcome = function () {
+      switchMainTab("create");
+    };
+
     window.showInfoPopup = function (title, message) {
       document.getElementById("infoPopupTitle").textContent = title;
       document.getElementById("infoPopupMessage").textContent = message;
@@ -792,13 +776,8 @@ Explanation: The principle of indemnity restores the insured to the same financi
       } catch (err) {
         if (err.code === "auth/unauthorized-domain") {
           showInfoPopup(
-            "Authorize Your GitHub Domain",
+            "Authorize Your Domain",
             `Go to Firebase Console -> Authentication -> Settings -> Authorized domains -> Add domain, and paste:\n\n${window.location.hostname}`
-          );
-        } else if (err.code === "auth/configuration-not-found" || err.code === "auth/operation-not-allowed") {
-          showInfoPopup(
-            "Enable Google Sign-In",
-            "Go to Firebase Console -> Authentication -> Sign-in method -> click Google -> toggle Enable ON and click Save."
           );
         } else {
           showInfoPopup("Sign-In Notice", err.message);
@@ -811,7 +790,55 @@ Explanation: The principle of indemnity restores the insured to the same financi
     };
 
     // ============================================================================
-    // STRICT TEXT PARSER & FILE UPLOAD (TXT + PDF)
+    // SECTION DROPDOWN & MANUAL INPUT HANDLING
+    // ============================================================================
+    function getUniqueSections() {
+      const map = new Map();
+      allAttempts.forEach(a => {
+        const key = a.section.trim();
+        map.set(key, (map.get(key) || 0) + 1);
+      });
+      return Array.from(map.entries());
+    }
+
+    function refreshSectionDropdowns() {
+      const dropdown = document.getElementById("examSectionDropdown");
+      if (!dropdown) return;
+
+      const currentVal = dropdown.value;
+      dropdown.innerHTML = `
+        <option value="">-- Select Exam Section --</option>
+        <option value="__NEW__">+ Create New Section...</option>
+      `;
+
+      getUniqueSections().forEach(([secName]) => {
+        const opt = document.createElement("option");
+        opt.value = secName;
+        opt.textContent = secName;
+        dropdown.appendChild(opt);
+      });
+
+      if (currentVal && (currentVal === "__NEW__" || getUniqueSections().some(([s]) => s === currentVal))) {
+        dropdown.value = currentVal;
+      }
+    }
+
+    window.handleSectionDropdownChange = function () {
+      const dropdown = document.getElementById("examSectionDropdown");
+      const manualInput = document.getElementById("examSectionManualInput");
+
+      if (dropdown.value === "__NEW__") {
+        manualInput.classList.remove("hidden");
+        manualInput.value = "";
+        manualInput.focus();
+      } else {
+        manualInput.classList.add("hidden");
+        manualInput.value = dropdown.value;
+      }
+    };
+
+    // ============================================================================
+    // STRICT TEXT PARSER & FILE UPLOAD
     // ============================================================================
     function parseStrictTextQuestions(rawText) {
       const normalized = rawText.replace(/\r\n/g, "\n").trim();
@@ -934,13 +961,13 @@ Q2: [Next Question Text]`;
     };
 
     window.loadDemoQuestions = function () {
-      if (!document.getElementById("examSectionInput").value) {
-        document.getElementById("examSectionInput").value = "UIIC AO";
-      }
+      const dropdown = document.getElementById("examSectionDropdown");
+      dropdown.value = "__NEW__";
+      handleSectionDropdownChange();
+      document.getElementById("examSectionManualInput").value = "UIIC AO";
+
       if (!document.getElementById("paperTitleInput").value) {
-        const existingInSec = allAttempts.filter(
-          a => a.section.toLowerCase() === document.getElementById("examSectionInput").value.trim().toLowerCase()
-        ).length;
+        const existingInSec = allAttempts.filter(a => a.section.toLowerCase() === "uiic ao").length;
         document.getElementById("paperTitleInput").value = `Prelims Mock Paper ${existingInSec + 1}`;
       }
 
@@ -981,7 +1008,16 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
     // LIVE EXAM EXECUTION & LAST-QUESTION POP-UP LOGIC
     // ============================================================================
     window.parseAndStartExam = function () {
-      const section = document.getElementById("examSectionInput").value.trim();
+      const dropdown = document.getElementById("examSectionDropdown");
+      const manualInput = document.getElementById("examSectionManualInput");
+
+      let section = "";
+      if (dropdown.value === "__NEW__") {
+        section = manualInput.value.trim();
+      } else {
+        section = dropdown.value.trim();
+      }
+
       const paperTitle = document.getElementById("paperTitleInput").value.trim();
       const rawText = document.getElementById("rawTextInput").value;
       const errBox = document.getElementById("parseErrorBox");
@@ -989,7 +1025,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       errBox.classList.add("hidden");
 
       if (!section || !paperTitle) {
-        errBox.textContent = "Please enter both an Exam Section (e.g., GATE, ESE, UIIC AO) and a Paper Name.";
+        errBox.textContent = "Please select or enter an Exam Section and enter a Paper Name.";
         errBox.classList.remove("hidden");
         return;
       }
@@ -1058,7 +1094,6 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
         `Question ${idx + 1} of ${total}`;
       document.getElementById("liveQuestionText").textContent = qObj.question;
 
-      // Update Save & Next button label on the last question
       const nextBtn = document.getElementById("nextQBtn");
       if (idx === total - 1) {
         nextBtn.textContent = "Save & Finish";
@@ -1127,7 +1162,6 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       }
     };
 
-    // Triggered when clicking "Save & Next"
     window.handleSaveAndNext = function () {
       const isLast = currentExam.currentIndex === currentExam.questions.length - 1;
       if (isLast) {
@@ -1138,7 +1172,6 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       }
     };
 
-    // Opens the Last Question / Submit Pop-up Modal
     window.openLastQuestionModal = function (fromLastQuestionButton = true) {
       const total = currentExam.questions.length;
       const answeredCount = Object.keys(currentExam.responses).length;
@@ -1156,13 +1189,11 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       if (fromLastQuestionButton) {
         badgeEl.textContent = "Last Question Reached";
         titleEl.textContent = "You have reached the last question!";
-        descEl.textContent =
-          "Do you want to submit the test now or check back your answers from Question 1?";
+        descEl.textContent = "Do you want to submit your test now or check back your answers from Question 1?";
       } else {
         badgeEl.textContent = "Confirm Submission";
         titleEl.textContent = "Ready to submit your paper?";
-        descEl.textContent =
-          "You can either submit your test right now or jump back to Question 1 to verify your answers.";
+        descEl.textContent = "You can either submit your test right now or jump back to Question 1 to verify your answers.";
       }
 
       document.getElementById("lastQuestionModal").classList.remove("hidden");
@@ -1172,14 +1203,12 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       document.getElementById("lastQuestionModal").classList.add("hidden");
     };
 
-    // Option 1 in Pop-up: Check Back Answers (Go back to 1st question)
     window.checkBackAnswersFromFirst = function () {
       closeLastQuestionModal();
       currentExam.currentIndex = 0;
       renderCurrentQuestion();
     };
 
-    // Option 2 in Pop-up: Submit Test
     window.confirmSubmitFromModal = function () {
       closeLastQuestionModal();
       finalizeExamSubmission();
@@ -1283,7 +1312,7 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
     };
 
     // ============================================================================
-    // SECTION-WISE DASHBOARD & CHART.JS PROGRESSION GRAPHS
+    // SECTION-WISE DASHBOARD & CHARTS
     // ============================================================================
     window.switchMainTab = function (tab) {
       document.getElementById("viewWelcome").classList.add("hidden");
@@ -1308,32 +1337,13 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
       } else if (tab === "create") {
         document.getElementById("viewCreate").classList.remove("hidden");
         createBtn.className = activeClass;
+        refreshSectionDropdowns();
       } else {
         document.getElementById("viewDashboard").classList.remove("hidden");
         dashBtn.className = activeClass;
         renderDashboard();
       }
     };
-
-    function getUniqueSections() {
-      const map = new Map();
-      allAttempts.forEach(a => {
-        const key = a.section.trim();
-        map.set(key, (map.get(key) || 0) + 1);
-      });
-      return Array.from(map.entries());
-    }
-
-    function refreshSectionAutocomplete() {
-      const listEl = document.getElementById("existingSectionsList");
-      if (!listEl) return;
-      listEl.innerHTML = "";
-      getUniqueSections().forEach(([secName]) => {
-        const opt = document.createElement("option");
-        opt.value = secName;
-        listEl.appendChild(opt);
-      });
-    }
 
     function renderDashboard() {
       const sections = getUniqueSections();
@@ -1607,8 +1617,6 @@ Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net s
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
     }
-
-    refreshSectionAutocomplete();
   </script>
 </body>
 </html>
