@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Exam Mock Test & Section Progress Tracker</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for Section-Wise Progression & Comparison Graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- PDF.js for Direct Formatted PDF Text Extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-indigo-950 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-lg tracking-tight">
+          MockTrack
+        </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg leading-tight">Custom Mock Test & Section Analytics</h1>
+          <p class="text-xs text-indigo-300">100% Free Client-Side Parser + Hybrid Firebase Spark Sync</p>
+        </div>
+      </div>
+
+      <!-- Navigation & Auth Controls -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <button onclick="switchMainTab('create')" id="navCreateBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition">
+          + New Mock Test
+        </button>
+        <button onclick="switchMainTab('dashboard')" id="navDashBtn" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition">
+          Section Analytics
+        </button>
+
+        <div class="h-5 w-px bg-indigo-800 mx-1"></div>
+
+        <!-- Auth Status Area -->
+        <div id="authContainer" class="flex items-center gap-2">
+          <span id="userBadge" class="text-xs bg-indigo-900 border border-indigo-700 px-2.5 py-1 rounded-full text-indigo-200">
+            Local Guest Mode
+          </span>
+          <button id="googleLoginBtn" onclick="handleGoogleSignIn()" class="bg-white text-slate-900 hover:bg-slate-100 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <span>Sign in with Google</span>
+          </button>
+          <button id="logoutBtn" onclick="handleSignOut()" class="hidden bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1">
+
+    <!-- ==========================================
+         VIEW 1: CREATE & LAUNCH NEW MOCK TEST
+         ========================================== -->
+    <section id="viewCreate" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left Column: Test Metadata & AI Prompt Helper -->
+        <div class="space-y-6">
+          <!-- Step 1: Categorize Exam Section & Paper -->
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-1">1. Exam Section & Paper Details</h2>
+            <p class="text-xs text-slate-500 mb-4">
+              Type any exam category (e.g., UIIC AO, GATE, ESE, SSC CGL). Papers under the same section are grouped together for progression charts.
+            </p>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  Exam Section / Folder *
+                </label>
+                <input
+                  type="text"
+                  id="examSectionInput"
+                  list="existingSectionsList"
+                  placeholder="e.g., UIIC AO, GATE, ESE"
+                  class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+                <datalist id="existingSectionsList"></datalist>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">
+                  Paper Name / Number *
+                </label>
+                <input
+                  type="text"
+                  id="paperTitleInput"
+                  placeholder="e.g., Prelims Mock Paper 1"
+                  class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+
+              <div class="grid grid-cols-3 gap-2 pt-1">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Duration (Min)</label>
+                  <input type="number" id="durationInput" value="30" min="1" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Marks / Correct</label>
+                  <input type="number" id="positiveMarksInput" value="1" step="0.25" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Negative Mark</label>
+                  <input type="number" id="negativeMarksInput" value="0.25" step="0.05" min="0" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-sm" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Copy AI Strict Format Prompt -->
+          <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-sm font-bold text-indigo-950">2. Convert Any PDF via Free AI</h2>
+              <span class="text-[11px] bg-indigo-200 text-indigo-900 font-semibold px-2 py-0.5 rounded">100% Reliable</span>
+            </div>
+            <p class="text-xs text-indigo-900/80 mb-3 leading-relaxed">
+              Upload your question PDF to ChatGPT or Gemini along with this strict text prompt, then paste the AI's reply into the box on the right (or upload as a <code>.txt</code> / <code>.pdf</code> file).
+            </p>
+            <button
+              onclick="copyStrictAiPrompt()"
+              id="copyPromptBtn"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-3 rounded-lg text-xs shadow-sm transition"
+            >
+              Copy Strict Text Prompt for Gemini / ChatGPT
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 2 Columns: Strict Text Input or File Upload -->
+        <div class="lg:col-span-2 bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">3. Paste Strict Formatted Questions or Upload File</h2>
+              <p class="text-xs text-slate-500">Supports direct paste, <code>.txt</code> files, or formatted <code>.pdf</code> files.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 transition">
+                Upload .TXT or .PDF
+                <input type="file" id="fileUploadInput" accept=".txt,.pdf" class="hidden" onchange="handleFileUpload(event)" />
+              </label>
+              <button onclick="loadDemoQuestions()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                Load Demo Paper
+              </button>
+            </div>
+          </div>
+
+          <textarea
+            id="rawTextInput"
+            rows="13"
+            class="w-full flex-1 p-3.5 rounded-lg border border-slate-300 font-mono text-xs leading-relaxed focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            placeholder="Q1: What is the unit of electrical resistance?
+A) Ampere
+B) Volt
+C) Ohm
+D) Watt
+Answer: C
+Explanation: Electrical resistance is measured in Ohms (Ω).
+---
+Q2: Which insurance principle states that the insured should not make a profit from a loss?
+A) Subrogation
+B) Indemnity
+C) Proximate Cause
+D) Contribution
+Answer: B
+Explanation: The principle of indemnity restores the insured to the same financial position as before the loss."
+          ></textarea>
+
+          <div id="parseErrorBox" class="hidden mt-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium"></div>
+
+          <div class="mt-4 flex items-center justify-between pt-2 border-t border-slate-100">
+            <span id="uploadStatusText" class="text-xs text-slate-500">Ready to parse questions.</span>
+            <button
+              onclick="parseAndStartExam()"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm shadow transition"
+            >
+              Start Mock Test Now
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: LIVE MOCK TEST INTERFACE
+         ========================================== -->
+    <section id="viewExam" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Main Question Area -->
+        <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between min-h-[460px]">
+          <div>
+            <!-- Exam Header Info -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-200">
+              <div>
+                <span id="liveExamBadge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-indigo-100 text-indigo-800"></span>
+                <h2 id="livePaperTitle" class="text-lg font-bold text-slate-900 mt-1"></h2>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <span class="block text-[11px] uppercase text-slate-400 font-semibold">Time Remaining</span>
+                  <span id="liveTimerDisplay" class="font-mono text-lg font-bold text-indigo-700">00:00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Question Counter & Text -->
+            <div class="mb-4 flex items-center justify-between">
+              <span id="liveQuestionNumber" class="text-sm font-bold text-slate-500">Question 1 of 10</span>
+              <span id="liveMarkingInfo" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded"></span>
+            </div>
+
+            <div id="liveQuestionText" class="text-base font-medium text-slate-900 mb-6 whitespace-pre-line leading-relaxed"></div>
+
+            <!-- Options Container -->
+            <div id="liveOptionsContainer" class="space-y-3"></div>
+          </div>
+
+          <!-- Bottom Navigation Buttons -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-6 mt-6 border-t border-slate-200">
+            <div class="flex items-center gap-2">
+              <button onclick="clearCurrentResponse()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold text-slate-600 hover:bg-slate-100">
+                Clear Response
+              </button>
+              <button onclick="toggleMarkForReview()" id="markReviewBtn" class="px-3 py-2 rounded-lg border border-amber-300 bg-amber-50 text-xs font-semibold text-amber-800 hover:bg-amber-100">
+                Mark for Review
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="navigateQuestion(-1)" id="prevQBtn" class="px-4 py-2 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100">
+                Previous
+              </button>
+              <button onclick="navigateQuestion(1)" id="nextQBtn" class="px-5 py-2 rounded-lg bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-700">
+                Save & Next
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Palette Sidebar -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-3">Question Palette</h3>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-4 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-600 inline-block"></span> Answered</div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-500 inline-block"></span> Marked Review</div>
+              <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span> Unvisited</div>
+            </div>
+            <div id="questionPaletteGrid" class="grid grid-cols-5 gap-2 max-h-64 overflow-y-auto pr-1"></div>
+          </div>
+
+          <button
+            onclick="submitExam(false)"
+            class="w-full mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition"
+          >
+            Submit Paper
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: SECTION-WISE ANALYTICS & PROGRESS
+         ========================================== -->
+    <section id="viewDashboard" class="hidden space-y-6">
+
+      <!-- Top Bar: Section Folder Selector & Backup Actions -->
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Exam Section Folders & Progression Analytics</h2>
+            <p class="text-xs text-slate-500">
+              Click any exam section tab below to isolate its papers, percentage progression trend, and marks comparison.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="exportBackupJson()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+              Export Backup (.json)
+            </button>
+            <label class="cursor-pointer px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+              Import Backup
+              <input type="file" accept=".json" class="hidden" onchange="importBackupJson(event)" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic Section Folder Tabs (e.g. [GATE (4)] [ESE (3)] [UIIC AO (2)]) -->
+        <div id="sectionTabsContainer" class="flex items-center gap-2 flex-wrap pt-2 border-t border-slate-100"></div>
+      </div>
+
+      <!-- Summary KPI Cards for Selected Exam Section -->
+      <div id="dashboardContentArea" class="space-y-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Selected Section</span>
+            <p id="statSectionName" class="text-lg font-bold text-indigo-700 mt-1 truncate">—</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Papers Attempted</span>
+            <p id="statPapersCount" class="text-2xl font-bold text-slate-900 mt-1">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Average Percentage</span>
+            <p id="statAvgPercent" class="text-2xl font-bold text-emerald-600 mt-1">0%</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Best Paper Score</span>
+            <p id="statBestPercent" class="text-2xl font-bold text-amber-600 mt-1">0%</p>
+          </div>
+        </div>
+
+        <!-- Progression & Marks Comparison Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Percentage Progression Across Papers</h3>
+            <p class="text-xs text-slate-500 mb-4">Tracks your percentage improvement chronologically in this exam section.</p>
+            <div class="h-64">
+              <canvas id="progressionLineChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Paper-by-Paper Marks & Accuracy Comparison</h3>
+            <p class="text-xs text-slate-500 mb-4">Compares marks scored vs. maximum marks for each paper in this section.</p>
+            <div class="h-64">
+              <canvas id="marksBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Paper History Table & Review Modal Trigger -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-900 mb-3">Attempted Papers in This Section</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-500 uppercase">
+                  <th class="py-2.5 px-3">#</th>
+                  <th class="py-2.5 px-3">Paper Title</th>
+                  <th class="py-2.5 px-3">Date</th>
+                  <th class="py-2.5 px-3">Marks Scored</th>
+                  <th class="py-2.5 px-3">Percentage</th>
+                  <th class="py-2.5 px-3">Correct / Wrong / Skipped</th>
+                  <th class="py-2.5 px-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="sectionHistoryTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Answer Key Review Panel (Shown when inspecting a finished paper) -->
+      <div id="paperReviewPanel" class="hidden bg-white p-6 rounded-xl border border-indigo-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div>
+            <span id="reviewSectionBadge" class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800"></span>
+            <h3 id="reviewPaperTitle" class="text-base font-bold text-slate-900 mt-1">Paper Solutions & Review</h3>
+          </div>
+          <button onclick="closePaperReview()" class="text-xs font-bold text-slate-500 hover:text-slate-800 px-3 py-1 rounded border border-slate-200">
+            Close Review
+          </button>
+        </div>
+        <div id="reviewQuestionsList" class="space-y-4 max-h-[520px] overflow-y-auto pr-2"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       APPLICATION LOGIC & FIREBASE SPARK SYNC
+       ========================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // ============================================================================
+    // PASTE YOUR FIREBASE SPARK CONFIG HERE (From Part 1, Step 2)
+    // ============================================================================
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_API_KEY",
+      authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "PASTE_YOUR_PROJECT_ID",
+      storageBucket: "PASTE_YOUR_PROJECT_ID.firebasestorage.app",
+      messagingSenderId: "PASTE_YOUR_SENDER_ID",
+      appId: "PASTE_YOUR_APP_ID"
+    };
+
+    const isFirebaseConfigured =
+      firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("PASTE_");
+
+    let auth = null;
+    let db = null;
+    let currentUser = null;
+
+    if (isFirebaseConfigured) {
+      try {
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+      } catch (err) {
+        console.warn("Firebase initialization skipped:", err);
+      }
+    }
+
+    // Configure PDF.js Worker
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
+    // ============================================================================
+    // STATE MANAGEMENT (HYBRID LOCALSTORAGE + FIRESTORE)
+    // ============================================================================
+    const LOCAL_STORAGE_KEY = "mocktrack_attempts_v1";
+    let allAttempts = loadLocalAttempts();
+    let activeSectionFilter = "";
+    let lineChartInstance = null;
+    let barChartInstance = null;
+
+    // Live Exam State
+    let currentExam = {
+      section: "",
+      paperTitle: "",
+      durationMinutes: 30,
+      posMarks: 1,
+      negMarks: 0.25,
+      questions: [],
+      responses: {}, // { index: selectedOptionIndex }
+      reviewFlags: {}, // { index: true/false }
+      currentIndex: 0,
+      remainingSeconds: 0,
+      timerInterval: null
+    };
+
+    function loadLocalAttempts() {
+      try {
+        const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveLocalAttempts() {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allAttempts));
+      refreshSectionAutocomplete();
+    }
+
+    // Syncs local attempts with the user's single Firestore document (1 write per test)
+    async function syncWithFirestore(direction = "merge") {
+      if (!db || !currentUser) return;
+      const userDocRef = doc(db, "users", currentUser.uid);
+
+      try {
+        if (direction === "pull" || direction === "merge") {
+          const snap = await getDoc(userDocRef);
+          if (snap.exists()) {
+            const cloudAttempts = snap.data().attempts || [];
+            const mapById = new Map();
+            [...cloudAttempts, ...allAttempts].forEach(item => mapById.set(item.id, item));
+            allAttempts = Array.from(mapById.values()).sort((a, b) => a.timestamp - b.timestamp);
+            saveLocalAttempts();
+          }
+        }
+        // Push merged list back if needed
+        await setDoc(
+          userDocRef,
+          {
+            email: currentUser.email || "",
+            displayName: currentUser.displayName || "",
+            updatedAt: Date.now(),
+            attempts: allAttempts
+          },
+          { merge: true }
+        );
+      } catch (err) {
+        console.error("Cloud sync error:", err);
+      }
+    }
+
+    // Listen to Firebase Auth state changes
+    if (auth) {
+      onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+        const badge = document.getElementById("userBadge");
+        const loginBtn = document.getElementById("googleLoginBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (user) {
+          badge.textContent = `Cloud Synced: ${user.displayName || user.email}`;
+          badge.className = "text-xs bg-emerald-900 border border-emerald-600 px-2.5 py-1 rounded-full text-emerald-100";
+          loginBtn.classList.add("hidden");
+          logoutBtn.classList.remove("hidden");
+          await syncWithFirestore("merge");
+          renderDashboard();
+        } else {
+          badge.textContent = "Local Browser Mode";
+          badge.className = "text-xs bg-indigo-900 border border-indigo-700 px-2.5 py-1 rounded-full text-indigo-200";
+          loginBtn.classList.remove("hidden");
+          logoutBtn.classList.add("hidden");
+        }
+      });
+    }
+
+    window.handleGoogleSignIn = async function () {
+      if (!isFirebaseConfigured) {
+        alert(
+          "To enable Google Sign-In, paste your free Firebase Spark firebaseConfig object into index.html (see Part 1 of the setup guide). Your progress is currently saved automatically in your browser's LocalStorage!"
+        );
+        return;
+      }
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        alert("Sign-In failed: " + err.message);
+      }
+    };
+
+    window.handleSignOut = async function () {
+      if (auth) await signOut(auth);
+    };
+
+    // ============================================================================
+    // STRICT TEXT PARSER & FILE UPLOAD (TXT + PDF)
+    // ============================================================================
+    function parseStrictTextQuestions(rawText) {
+      const normalized = rawText.replace(/\r\n/g, "\n").trim();
+      if (!normalized) return [];
+
+      // Split either by --- separator OR before Q1:, Q2:, 1., etc.
+      let blocks = normalized
+        .split(/\n\s*---+\s*\n/)
+        .map(b => b.trim())
+        .filter(Boolean);
+
+      if (blocks.length === 1) {
+        blocks = normalized
+          .split(/\n(?=(?:Q\d+|Question\s*\d+|\d+)[\s:.)])/i)
+          .map(b => b.trim())
+          .filter(Boolean);
+      }
+
+      const parsedQuestions = [];
+
+      for (const block of blocks) {
+        const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+        if (lines.length < 3) continue;
+
+        let questionLines = [];
+        const options = [];
+        let answerIndex = -1;
+        let explanationLines = [];
+        let mode = "question";
+
+        for (const line of lines) {
+          const optMatch = line.match(/^([A-Ea-e])[).:\-]\s*(.+)$/);
+          const ansMatch = line.match(/^(?:Answer|Correct\s*Answer|Ans)\s*[:\-]\s*([A-Ea-e1-5])/i);
+          const expMatch = line.match(/^(?:Explanation|Solution|Exp)\s*[:\-]\s*(.*)$/i);
+
+          if (optMatch && (mode === "question" || mode === "options")) {
+            mode = "options";
+            options.push(optMatch[2].trim());
+          } else if (ansMatch) {
+            mode = "answer";
+            const token = ansMatch[1].toUpperCase();
+            if ("ABCDE".includes(token)) {
+              answerIndex = "ABCDE".indexOf(token);
+            } else {
+              answerIndex = parseInt(token, 10) - 1;
+            }
+          } else if (expMatch) {
+            mode = "explanation";
+            if (expMatch[1]) explanationLines.push(expMatch[1].trim());
+          } else {
+            if (mode === "question") {
+              questionLines.push(line.replace(/^(?:Q\d+|Question\s*\d+|\d+)[\s:.)]+/i, "").trim());
+            } else if (mode === "options" && options.length > 0) {
+              options[options.length - 1] += " " + line;
+            } else if (mode === "explanation") {
+              explanationLines.push(line);
+            }
+          }
+        }
+
+        if (questionLines.length > 0 && options.length >= 2 && answerIndex >= 0 && answerIndex < options.length) {
+          parsedQuestions.push({
+            question: questionLines.join("\n"),
+            options,
+            answer: answerIndex,
+            explanation: explanationLines.join("\n") || "No explanation provided."
+          });
+        }
+      }
+
+      return parsedQuestions;
+    }
+
+    window.handleFileUpload = async function (event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById("uploadStatusText");
+      statusEl.textContent = `Reading ${file.name}...`;
+
+      try {
+        if (file.name.toLowerCase().endsWith(".pdf")) {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          let extracted = "";
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const pageLines = content.items.map(item => item.str).join(" ");
+            extracted += pageLines + "\n";
+          }
+          document.getElementById("rawTextInput").value = extracted;
+          statusEl.textContent = `Extracted text from ${pdf.numPages} PDF page(s).`;
+        } else {
+          const text = await file.text();
+          document.getElementById("rawTextInput").value = text;
+          statusEl.textContent = `Loaded ${file.name} successfully.`;
+        }
+      } catch (err) {
+        statusEl.textContent = "Error reading file: " + err.message;
+      }
+    };
+
+    window.copyStrictAiPrompt = function () {
+      const promptText = `Convert all questions and answers from the attached document into the following STRICT plain text format. Do not use markdown bolding, tables, or extra commentary. Separate every question with "---":
+
+Q1: [Full Question Text]
+A) [Option A]
+B) [Option B]
+C) [Option C]
+D) [Option D]
+Answer: [Single Letter A, B, C, or D]
+Explanation: [Brief explanation of the correct answer]
+---
+Q2: [Next Question Text]`;
+
+      navigator.clipboard.writeText(promptText);
+      const btn = document.getElementById("copyPromptBtn");
+      const oldText = btn.textContent;
+      btn.textContent = "Copied Strict AI Prompt to Clipboard!";
+      setTimeout(() => (btn.textContent = oldText), 2500);
+    };
+
+    window.loadDemoQuestions = function () {
+      if (!document.getElementById("examSectionInput").value) {
+        document.getElementById("examSectionInput").value = "UIIC AO";
+      }
+      if (!document.getElementById("paperTitleInput").value) {
+        const existingInSec = allAttempts.filter(
+          a => a.section.toLowerCase() === document.getElementById("examSectionInput").value.trim().toLowerCase()
+        ).length;
+        document.getElementById("paperTitleInput").value = `Prelims Mock Paper ${existingInSec + 1}`;
+      }
+
+      document.getElementById("rawTextInput").value = `Q1: Which principle of insurance states that the insured must have a financial stake in the subject matter of insurance?
+A) Utmost Good Faith
+B) Insurable Interest
+C) Subrogation
+D) Proximate Cause
+Answer: B
+Explanation: Insurable interest means the policy owner would suffer a direct financial loss if the insured asset is damaged.
+---
+Q2: If a train 150 meters long passes a telegraph pole in 12 seconds, what is the speed of the train in km/hr?
+A) 40 km/hr
+B) 45 km/hr
+C) 50 km/hr
+D) 54 km/hr
+Answer: B
+Explanation: Speed = (150 / 12) m/s = 12.5 m/s. In km/hr = 12.5 * (18/5) = 45 km/hr.
+---
+Q3: Under a fire insurance policy, the right of the insurer to step into the shoes of the insured after settling a claim is called:
+A) Contribution
+B) Subrogation
+C) Mitigation
+D) Reinsurance
+Answer: B
+Explanation: Subrogation transfers legal rights of recovery against a third party from the insured to the insurer after claim settlement.
+---
+Q4: In an examination, a student scores +1 mark for every correct answer and loses 0.25 marks for every wrong answer. If they attempt 40 questions and get 32 correct, what is their net score?
+A) 28.0
+B) 30.0
+C) 31.0
+D) 32.0
+Answer: B
+Explanation: 32 correct = 32 marks. 8 wrong = 8 * 0.25 = 2 marks deducted. Net score = 32 - 2 = 30.0.`;
+    };
+
+    // ============================================================================
+    // LIVE EXAM EXECUTION
+    // ============================================================================
+    window.parseAndStartExam = function () {
+      const section = document.getElementById("examSectionInput").value.trim();
+      const paperTitle = document.getElementById("paperTitleInput").value.trim();
+      const rawText = document.getElementById("rawTextInput").value;
+      const errBox = document.getElementById("parseErrorBox");
+
+      errBox.classList.add("hidden");
+
+      if (!section || !paperTitle) {
+        errBox.textContent = "Please enter both an Exam Section (e.g., GATE, ESE, UIIC AO) and a Paper Name.";
+        errBox.classList.remove("hidden");
+        return;
+      }
+
+      const questions = parseStrictTextQuestions(rawText);
+      if (questions.length === 0) {
+        errBox.textContent =
+          "Could not parse any valid questions. Make sure each question has options A), B), C), D) and a line starting with 'Answer: A/B/C/D'.";
+        errBox.classList.remove("hidden");
+        return;
+      }
+
+      currentExam = {
+        section,
+        paperTitle,
+        durationMinutes: parseFloat(document.getElementById("durationInput").value) || 30,
+        posMarks: parseFloat(document.getElementById("positiveMarksInput").value) || 1,
+        negMarks: parseFloat(document.getElementById("negativeMarksInput").value) || 0,
+        questions,
+        responses: {},
+        reviewFlags: {},
+        currentIndex: 0,
+        remainingSeconds: Math.round((parseFloat(document.getElementById("durationInput").value) || 30) * 60),
+        timerInterval: null
+      };
+
+      document.getElementById("liveExamBadge").textContent = currentExam.section;
+      document.getElementById("livePaperTitle").textContent = currentExam.paperTitle;
+      document.getElementById("liveMarkingInfo").textContent = `+${currentExam.posMarks} / -${currentExam.negMarks}`;
+
+      document.getElementById("viewCreate").classList.add("hidden");
+      document.getElementById("viewDashboard").classList.add("hidden");
+      document.getElementById("viewExam").classList.remove("hidden");
+
+      renderCurrentQuestion();
+      startExamTimer();
+    };
+
+    function startExamTimer() {
+      if (currentExam.timerInterval) clearInterval(currentExam.timerInterval);
+      updateTimerUI();
+      currentExam.timerInterval = setInterval(() => {
+        currentExam.remainingSeconds--;
+        updateTimerUI();
+        if (currentExam.remainingSeconds <= 0) {
+          clearInterval(currentExam.timerInterval);
+          submitExam(true);
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const mins = Math.floor(currentExam.remainingSeconds / 60);
+      const secs = currentExam.remainingSeconds % 60;
+      document.getElementById("liveTimerDisplay").textContent =
+        `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function renderCurrentQuestion() {
+      const idx = currentExam.currentIndex;
+      const qObj = currentExam.questions[idx];
+
+      document.getElementById("liveQuestionNumber").textContent =
+        `Question ${idx + 1} of ${currentExam.questions.length}`;
+      document.getElementById("liveQuestionText").textContent = qObj.question;
+
+      const optsContainer = document.getElementById("liveOptionsContainer");
+      optsContainer.innerHTML = "";
+
+      const letters = ["A", "B", "C", "D", "E"];
+      qObj.options.forEach((optText, oIdx) => {
+        const isSelected = currentExam.responses[idx] === oIdx;
+        const btn = document.createElement("button");
+        btn.className = `w-full text-left p-3.5 rounded-xl border text-sm transition flex items-start gap-3 ${
+          isSelected
+            ? "bg-indigo-50 border-indigo-600 text-indigo-950 font-semibold ring-1 ring-indigo-600"
+            : "bg-white border-slate-200 hover:bg-slate-50 text-slate-800"
+        }`;
+        btn.onclick = () => {
+          currentExam.responses[idx] = oIdx;
+          renderCurrentQuestion();
+        };
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+            isSelected ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-600"
+          }">${letters[oIdx]}</span>
+          <span class="leading-snug">${escapeHtml(optText)}</span>
+        `;
+        optsContainer.appendChild(btn);
+      });
+
+      renderQuestionPalette();
+    }
+
+    function renderQuestionPalette() {
+      const grid = document.getElementById("questionPaletteGrid");
+      grid.innerHTML = "";
+      currentExam.questions.forEach((_, i) => {
+        const isCurrent = i === currentExam.currentIndex;
+        const isAnswered = currentExam.responses[i] !== undefined;
+        const isReview = Boolean(currentExam.reviewFlags[i]);
+
+        let colorClass = "bg-slate-100 text-slate-700 hover:bg-slate-200";
+        if (isReview) colorClass = "bg-amber-500 text-white";
+        else if (isAnswered) colorClass = "bg-emerald-600 text-white";
+
+        const ringClass = isCurrent ? "ring-2 ring-indigo-600 ring-offset-1" : "";
+
+        const btn = document.createElement("button");
+        btn.className = `h-9 rounded-lg text-xs font-bold transition ${colorClass} ${ringClass}`;
+        btn.textContent = i + 1;
+        btn.onclick = () => {
+          currentExam.currentIndex = i;
+          renderCurrentQuestion();
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    window.navigateQuestion = function (delta) {
+      const next = currentExam.currentIndex + delta;
+      if (next >= 0 && next < currentExam.questions.length) {
+        currentExam.currentIndex = next;
+        renderCurrentQuestion();
+      }
+    };
+
+    window.clearCurrentResponse = function () {
+      delete currentExam.responses[currentExam.currentIndex];
+      renderCurrentQuestion();
+    };
+
+    window.toggleMarkForReview = function () {
+      const idx = currentExam.currentIndex;
+      currentExam.reviewFlags[idx] = !currentExam.reviewFlags[idx];
+      renderCurrentQuestion();
+    };
+
+    window.submitExam = async function (autoSubmitted = false) {
+      if (!autoSubmitted && !confirm("Are you sure you want to submit this paper?")) return;
+      if (currentExam.timerInterval) clearInterval(currentExam.timerInterval);
+
+      let correct = 0;
+      let wrong = 0;
+      let skipped = 0;
+
+      currentExam.questions.forEach((q, idx) => {
+        const userAns = currentExam.responses[idx];
+        if (userAns === undefined) skipped++;
+        else if (userAns === q.answer) correct++;
+        else wrong++;
+      });
+
+      const maxMarks = currentExam.questions.length * currentExam.posMarks;
+      const rawScored = correct * currentExam.posMarks - wrong * currentExam.negMarks;
+      const scoredMarks = Number(rawScored.toFixed(2));
+      const percentage = Number(Math.max(0, (scoredMarks / maxMarks) * 100).toFixed(1));
+
+      const attemptRecord = {
+        id: "att_" + Date.now(),
+        timestamp: Date.now(),
+        dateStr: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }),
+        section: currentExam.section,
+        paperTitle: currentExam.paperTitle,
+        totalQuestions: currentExam.questions.length,
+        correct,
+        wrong,
+        skipped,
+        scoredMarks,
+        maxMarks,
+        percentage,
+        questions: currentExam.questions,
+        responses: currentExam.responses
+      };
+
+      allAttempts.push(attemptRecord);
+      saveLocalAttempts();
+      activeSectionFilter = currentExam.section;
+
+      // Sync to Firebase Cloud in background (uses 1 write)
+      syncWithFirestore("push");
+
+      switchMainTab("dashboard");
+      openPaperReview(attemptRecord.id);
+    };
+
+    // ============================================================================
+    // SECTION-WISE DASHBOARD & CHART.JS PROGRESSION GRAPHS
+    // ============================================================================
+    window.switchMainTab = function (tab) {
+      document.getElementById("viewCreate").classList.add("hidden");
+      document.getElementById("viewExam").classList.add("hidden");
+      document.getElementById("viewDashboard").classList.add("hidden");
+
+      const createBtn = document.getElementById("navCreateBtn");
+      const dashBtn = document.getElementById("navDashBtn");
+
+      if (tab === "create") {
+        document.getElementById("viewCreate").classList.remove("hidden");
+        createBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition";
+        dashBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition";
+      } else {
+        document.getElementById("viewDashboard").classList.remove("hidden");
+        dashBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-700 text-white transition";
+        createBtn.className = "px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-200 hover:bg-indigo-800 transition";
+        renderDashboard();
+      }
+    };
+
+    function getUniqueSections() {
+      const map = new Map();
+      allAttempts.forEach(a => {
+        const key = a.section.trim();
+        map.set(key, (map.get(key) || 0) + 1);
+      });
+      return Array.from(map.entries()); // [[sectionName, count], ...]
+    }
+
+    function refreshSectionAutocomplete() {
+      const listEl = document.getElementById("existingSectionsList");
+      if (!listEl) return;
+      listEl.innerHTML = "";
+      getUniqueSections().forEach(([secName]) => {
+        const opt = document.createElement("option");
+        opt.value = secName;
+        listEl.appendChild(opt);
+      });
+    }
+
+    function renderDashboard() {
+      const sections = getUniqueSections();
+      const tabsContainer = document.getElementById("sectionTabsContainer");
+      tabsContainer.innerHTML = "";
+
+      if (sections.length === 0) {
+        tabsContainer.innerHTML = `<span class="text-xs text-slate-400 py-1">No papers attempted yet. Start a mock test to create your first Exam Section!</span>`;
+        document.getElementById("statSectionName").textContent = "No Data";
+        document.getElementById("statPapersCount").textContent = "0";
+        document.getElementById("statAvgPercent").textContent = "0%";
+        document.getElementById("statBestPercent").textContent = "0%";
+        document.getElementById("sectionHistoryTableBody").innerHTML = "";
+        updateSectionCharts([]);
+        return;
+      }
+
+      if (!activeSectionFilter || !sections.some(([s]) => s === activeSectionFilter)) {
+        activeSectionFilter = sections[0][0];
+      }
+
+      sections.forEach(([secName, count]) => {
+        const isActive = secName === activeSectionFilter;
+        const btn = document.createElement("button");
+        btn.className = `px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+          isActive
+            ? "bg-indigo-600 text-white shadow-sm"
+            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+        }`;
+        btn.innerHTML = `<span>${escapeHtml(secName)}</span><span class="px-1.5 py-0.2 rounded-full text-[10px] ${
+          isActive ? "bg-indigo-800 text-indigo-100" : "bg-slate-200 text-slate-600"
+        }">${count}</span>`;
+        btn.onclick = () => {
+          activeSectionFilter = secName;
+          closePaperReview();
+          renderDashboard();
+        };
+        tabsContainer.appendChild(btn);
+      });
+
+      // Filter papers strictly for the active Exam Section
+      const sectionPapers = allAttempts
+        .filter(a => a.section.trim() === activeSectionFilter)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      const avgPct =
+        sectionPapers.reduce((acc, p) => acc + p.percentage, 0) / sectionPapers.length;
+      const bestPct = Math.max(...sectionPapers.map(p => p.percentage));
+
+      document.getElementById("statSectionName").textContent = activeSectionFilter;
+      document.getElementById("statPapersCount").textContent = sectionPapers.length;
+      document.getElementById("statAvgPercent").textContent = `${avgPct.toFixed(1)}%`;
+      document.getElementById("statBestPercent").textContent = `${bestPct.toFixed(1)}%`;
+
+      // Render Table
+      const tbody = document.getElementById("sectionHistoryTableBody");
+      tbody.innerHTML = "";
+      sectionPapers.forEach((paper, idx) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-semibold text-slate-500">${idx + 1}</td>
+          <td class="py-3 px-3 font-bold text-slate-900">${escapeHtml(paper.paperTitle)}</td>
+          <td class="py-3 px-3 text-slate-500">${paper.dateStr}</td>
+          <td class="py-3 px-3 font-semibold text-slate-800">${paper.scoredMarks} / ${paper.maxMarks}</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded font-bold ${
+              paper.percentage >= 70
+                ? "bg-emerald-100 text-emerald-800"
+                : paper.percentage >= 45
+                ? "bg-amber-100 text-amber-800"
+                : "bg-rose-100 text-rose-800"
+            }">${paper.percentage}%</span>
+          </td>
+          <td class="py-3 px-3 text-slate-600">
+            <span class="text-emerald-600 font-bold">${paper.correct}C</span> /
+            <span class="text-rose-600 font-bold">${paper.wrong}W</span> /
+            <span class="text-slate-400">${paper.skipped}S</span>
+          </td>
+          <td class="py-3 px-3 text-right space-x-2">
+            <button onclick="openPaperReview('${paper.id}')" class="text-indigo-600 hover:underline font-bold">
+              Review Solutions
+            </button>
+            <button onclick="deletePaperAttempt('${paper.id}')" class="text-rose-500 hover:underline">
+              Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateSectionCharts(sectionPapers);
+    }
+
+    function updateSectionCharts(sectionPapers) {
+      const labels = sectionPapers.map((p, i) => `P${i + 1}: ${p.paperTitle}`);
+      const percentages = sectionPapers.map(p => p.percentage);
+      const scoredList = sectionPapers.map(p => p.scoredMarks);
+      const maxList = sectionPapers.map(p => p.maxMarks);
+
+      const lineCtx = document.getElementById("progressionLineChart").getContext("2d");
+      if (lineChartInstance) lineChartInstance.destroy();
+      lineChartInstance = new Chart(lineCtx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: `${activeSectionFilter} Score Progression (%)`,
+              data: percentages,
+              borderColor: "#4f46e5",
+              backgroundColor: "rgba(79, 70, 229, 0.12)",
+              borderWidth: 2.5,
+              tension: 0.3,
+              fill: true,
+              pointRadius: 5,
+              pointBackgroundColor: "#4f46e5"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, max: 100, title: { display: true, text: "Percentage (%)" } }
+          }
+        }
+      });
+
+      const barCtx = document.getElementById("marksBarChart").getContext("2d");
+      if (barChartInstance) barChartInstance.destroy();
+      barChartInstance = new Chart(barCtx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Marks Scored",
+              data: scoredList,
+              backgroundColor: "#10b981",
+              borderRadius: 6
+            },
+            {
+              label: "Max Marks",
+              data: maxList,
+              backgroundColor: "#e2e8f0",
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: "Marks" } }
+          }
+        }
+      });
+    }
+
+    window.openPaperReview = function (attemptId) {
+      const paper = allAttempts.find(a => a.id === attemptId);
+      if (!paper || !paper.questions) return;
+
+      document.getElementById("reviewSectionBadge").textContent = paper.section;
+      document.getElementById("reviewPaperTitle").textContent =
+        `${paper.paperTitle} — Detailed Solutions (${paper.scoredMarks}/${paper.maxMarks} Marks, ${paper.percentage}%)`;
+
+      const listEl = document.getElementById("reviewQuestionsList");
+      listEl.innerHTML = "";
+      const letters = ["A", "B", "C", "D", "E"];
+
+      paper.questions.forEach((q, idx) => {
+        const userAns = paper.responses ? paper.responses[idx] : undefined;
+        const isCorrect = userAns === q.answer;
+        const statusBadge =
+          userAns === undefined
+            ? `<span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Skipped</span>`
+            : isCorrect
+            ? `<span class="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Correct</span>`
+            : `<span class="text-[11px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold">Wrong</span>`;
+
+        const card = document.createElement("div");
+        card.className = "p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-2";
+
+        const optsHtml = q.options
+          .map((opt, oIdx) => {
+            let style = "text-slate-600";
+            if (oIdx === q.answer) style = "text-emerald-700 font-bold";
+            else if (oIdx === userAns && userAns !== q.answer) style = "text-rose-600 line-through font-semibold";
+            return `<div class="text-xs ${style}">${letters[oIdx]}) ${escapeHtml(opt)}</div>`;
+          })
+          .join("");
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">Question ${idx + 1}</span>
+            ${statusBadge}
+          </div>
+          <p class="text-sm font-semibold text-slate-900">${escapeHtml(q.question)}</p>
+          <div class="space-y-1 pl-2 border-l-2 border-slate-200">${optsHtml}</div>
+          <p class="text-xs text-indigo-900 bg-indigo-50 p-2.5 rounded-lg border border-indigo-100">
+            <strong>Explanation:</strong> ${escapeHtml(q.explanation || "No explanation provided.")}
+          </p>
+        `;
+        listEl.appendChild(card);
+      });
+
+      const panel = document.getElementById("paperReviewPanel");
+      panel.classList.remove("hidden");
+      panel.scrollIntoView({ behavior: "smooth" });
+    };
+
+    window.closePaperReview = function () {
+      document.getElementById("paperReviewPanel").classList.add("hidden");
+    };
+
+    window.deletePaperAttempt = function (attemptId) {
+      if (!confirm("Delete this paper attempt from your history?")) return;
+      allAttempts = allAttempts.filter(a => a.id !== attemptId);
+      saveLocalAttempts();
+      syncWithFirestore("push");
+      renderDashboard();
+    };
+
+    window.exportBackupJson = function () {
+      const blob = new Blob([JSON.stringify(allAttempts, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `mock-test-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+    };
+
+    window.importBackupJson = async function (event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const imported = JSON.parse(text);
+        if (Array.isArray(imported)) {
+          const map = new Map();
+          [...allAttempts, ...imported].forEach(item => map.set(item.id, item));
+          allAttempts = Array.from(map.values());
+          saveLocalAttempts();
+          syncWithFirestore("push");
+          renderDashboard();
+        }
+      } catch (e) {
+        alert("Invalid backup JSON file.");
+      }
+    };
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Initialize autocomplete on first load
+    refreshSectionAutocomplete();
+  </script>
+</body>
+</html>
